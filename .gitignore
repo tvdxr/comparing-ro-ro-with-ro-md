@@ -1,0 +1,24 @@
+# Data folder - large files, not needed in repo
+data-cleaned/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Analysis outputs (optional)
+*.png
+*.jpg

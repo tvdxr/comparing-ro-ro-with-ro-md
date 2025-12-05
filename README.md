@@ -1,0 +1,1 @@
+download the dataset and add it to the folder: https://github.com/RoTak00/roro-analiza/releases/download/dataset-cleaned-1.0.0/data-cleaned.zip
