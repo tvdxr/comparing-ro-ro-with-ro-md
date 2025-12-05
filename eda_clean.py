@@ -3,6 +3,13 @@ import json
 from pathlib import Path
 from collections import Counter
 import statistics
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.linear_model import LogisticRegression
+
+import nltk
+nltk.download('stopwords', quiet=True)  # quiet=True suppresses output
+from nltk.corpus import stopwords
 
 print("="*80)
 print("EXPLORATORY DATA ANALYSIS - RORO-ANALIZA DATA-CLEANED FOLDER")
@@ -154,8 +161,69 @@ for category in sorted(category_stats.keys()):
     print(f"  Avg length: {stats['avg_length']:.0f} characters")
     print(f"  Avg words: {stats['avg_words']:.0f} words")
 
+# Word statistics 
 print("\n" + "="*80)
-print("7. FINAL SUMMARY")
+print("7. WORD STATISTICS")
+print("="*80)
+
+def analyze_words(articles_list):
+    word_counter = Counter()
+    romanian_stops = set(stopwords.words('romanian'))
+    for article in articles_list:
+        content = article.get('content', '')
+        title = article.get('title', '')
+        words = content.split() + title.split()
+        for word in words:
+            clean_word = word.strip('.,!?;"()[]').lower()
+            if clean_word not in romanian_stops and len(clean_word) > 3:
+                word_counter[clean_word] += 1
+                
+    df = pd.DataFrame.from_dict(word_counter, orient='index', columns=['count'])
+    
+    if df.empty:
+        return df
+    
+    df['percentage'] = (df['count'] /df['count'].sum()) * 100
+    
+    top5 = df.sort_values(by='percentage', ascending=False).head(5)
+    
+    return top5
+    
+print(analyze_words(all_files))
+
+# word len <= 3
+def analyze_small_diff(articles_list):
+    word_counter = Counter()
+    romanian_stops = set(stopwords.words('romanian'))
+    not_wrds = {" ", "-", "", "–", "•"}
+    
+    for article in articles_list:
+        content = article.get('content', '')
+        title = article.get('title', '')
+        words = content.split() + title.split()
+        for word in words:
+            clean_word = word.strip('.,!?;"()[]{}').lower()
+            if (clean_word and 
+                clean_word not in romanian_stops and 
+                len(clean_word) <= 3 and 
+                clean_word not in not_wrds):
+                word_counter[clean_word] += 1
+                
+    df = pd.DataFrame.from_dict(word_counter, orient='index', columns=['count'])
+    
+    if df.empty:
+        return df
+    
+    df['percentage'] = (df['count'] /df['count'].sum()) * 100
+    
+    top5 = df.sort_values(by='percentage', ascending=False).head(5)
+    
+    return top5
+
+print(analyze_small_diff(all_files))
+
+print("\n" + "="*80)
+print("8. FINAL SUMMARY")
 print("="*80)
 
 print(f"\nDataset Overview:")
