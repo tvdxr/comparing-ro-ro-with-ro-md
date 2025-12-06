@@ -166,6 +166,7 @@ print("\n" + "="*80)
 print("7. WORD STATISTICS")
 print("="*80)
 
+# word len > 3
 def analyze_words(articles_list):
     word_counter = Counter()
     romanian_stops = set(stopwords.words('romanian'))
@@ -188,8 +189,6 @@ def analyze_words(articles_list):
     top5 = df.sort_values(by='percentage', ascending=False).head(5)
     
     return top5
-    
-print(analyze_words(all_files))
 
 # word len <= 3
 def analyze_small_diff(articles_list):
@@ -221,6 +220,55 @@ def analyze_small_diff(articles_list):
     return top5
 
 print(analyze_small_diff(all_files))
+print(analyze_words(all_files))
+
+ro_corpus = [a for a in all_files if 'raioane' not in a['file_path']]
+md_corpus = [a for a in all_files if 'raioane'  in a['file_path']]
+
+def lang_diff(ro_corpus, md_corpus): 
+    # ro-ro = 0; ro-md = 1
+    texts = [a.get('content', '') for a in ro_corpus] + [a.get('content', '') for a in md_corpus]
+    labels = [0] * len(ro_corpus) + [1] * len(md_corpus)
+
+    # vectorization - ngram_range=(2, 5) looks for 2-word and 5-word phrases
+    cv = CountVectorizer(
+        # linking words removal (optional)
+        # stop_words = list(stopwords.words('romanian')),
+        ngram_range = (2, 5),
+        min_df = 5,
+        lowercase = True
+    )
+    X = cv.fit_transform(texts)
+
+    # model training c = 0.1 for strongest features
+    # model uses as few words as possible to separate the two classes
+    model = LogisticRegression(C=0.1, solver='liblinear', max_iter=1000)
+    model.fit(X, labels)
+    
+    # feature extraction
+    feature_names = cv.get_feature_names_out()
+    coefs = model.coef_[0] # weight of every phrase
+    
+    # results 
+    df_divergence = pd.DataFrame({'phrase' : feature_names, 'importance': coefs})
+    df_divergence = df_divergence.sort_values(by='importance', ascending=False)
+    
+    return df_divergence
+
+def print_divergent_phrases(df_divergence, top_n=15):
+    """Print top Moldova-specific and Romania-specific phrases."""
+    print("\n" + "="*80)
+    print("DIVERGENT PHRASES ANALYSIS")
+    print("="*80)
+    
+    print(f"\n Top {top_n} Moldova-specific phrases (RO-MD):")
+    print(df_divergence.head(top_n).to_string())
+    
+    print(f"\n Top {top_n} Romania-specific phrases (RO-RO):")
+    print(df_divergence.tail(top_n).to_string())
+
+df_divergence = lang_diff(ro_corpus, md_corpus)
+print_divergent_phrases(df_divergence, top_n=15)
 
 print("\n" + "="*80)
 print("8. FINAL SUMMARY")
