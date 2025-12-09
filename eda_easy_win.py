@@ -106,14 +106,13 @@ print("\n" + "="*80)
 print("4. METADATA ANALYSIS")
 print("="*80)
 
-# Extract file extensions from original HTML files
 file_extensions = Counter()
 for article in all_files:
     meta = article.get('metadata', {})
     if isinstance(meta, dict) and 'original_file' in meta:
         original_file = meta['original_file']
         if '.' in original_file:
-            # Get file extension (usually .html)
+            # file extension (.html)
             ext = original_file.split('.')[-1]
             file_extensions[ext] += 1
 
@@ -125,8 +124,6 @@ print("\n" + "="*80)
 print("5. LANGUAGE COVERAGE")
 print("="*80)
 
-# Distinguish between Romanian (Romania) and Romanian (Moldova)
-# ro-MD texts are only in 'raioane' folder, rest are ro-RO
 ro_ro_count = sum(1 for a in all_files if 'raioane' not in a['file_path'])
 ro_md_count = sum(1 for a in all_files if 'raioane' in a['file_path'])
 
@@ -139,7 +136,6 @@ print("\n" + "="*80)
 print("6. STATISTICS BY CATEGORY")
 print("="*80)
 
-# Calculate average content length and word count per category
 category_stats = {}
 for category in categories.keys():
     cat_articles = [a for a in all_files if category in a['file_path']]
@@ -147,7 +143,6 @@ for category in categories.keys():
         cat_content_lengths = [len(a.get('content', '')) for a in cat_articles]
         cat_content_words = [len(a.get('content', '').split()) for a in cat_articles]
         
-        # Store statistics for this category
         category_stats[category] = {
             'count': len(cat_articles),
             'avg_length': statistics.mean(cat_content_lengths),
@@ -161,7 +156,7 @@ for category in sorted(category_stats.keys()):
     print(f"  Avg length: {stats['avg_length']:.0f} characters")
     print(f"  Avg words: {stats['avg_words']:.0f} words")
 
-# Word statistics 
+# word statistics 
 print("\n" + "="*80)
 print("7. WORD STATISTICS")
 print("="*80)
