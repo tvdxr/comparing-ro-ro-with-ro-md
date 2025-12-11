@@ -7,13 +7,14 @@ import statistics
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
-
 import nltk
-nltk.download('stopwords', quiet=True)  # quiet=True suppresses output
 from nltk.corpus import stopwords
 
+nltk.download('stopwords', quiet=True)  # quiet=True suppresses output
+spacy.prefer_gpu() # uncomment if GPU is available
+
 print("="*80)
-print("EXPLORATORY DATA ANALYSIS - RORO-ANALIZA DATA-CLEANED FOLDER")
+print("EXPLORATORY DATA ANALYSIS")
 print("="*80)
 
 # Initialize data structures
@@ -216,8 +217,10 @@ def analyze_small_diff(articles_list):
     top5 = df.sort_values(by='percentage', ascending=False).head(5)
     
     return top5
-
+print("\nMost common words (length > 3):")
 print(analyze_words(all_files))
+
+print("\nMost common short words (length <= 3):")
 print(analyze_small_diff(all_files))
 
 ro_corpus = [a for a in all_files if 'raioane' not in a['file_path']]
@@ -251,7 +254,6 @@ def lang_diff(ro_corpus, md_corpus):
 
     # 1. Preprocessing
     print(f"Masking entities in {len(ro_raw)} RO texts and {len(md_raw)} MD texts...")
-    print("This may still take a moment, but it's much faster now...")
     
     ro_texts = batch_preprocess_with_masking(ro_raw)
     md_texts = batch_preprocess_with_masking(md_raw)
@@ -293,26 +295,25 @@ def print_divergent_phrases(df_divergence, top_n=15):
     
     print(f"\n Top {top_n} Romania-specific phrases (RO-RO):")
     print(df_divergence.tail(top_n).to_string())
+    
+    print("\n" + "="*80)
+    print("8. FINAL SUMMARY")
+    print("="*80)
+    
+    print(f"\nDataset Overview:")
+    print(f"  Total articles: {len(all_files):,}")
+    print(f"  Total unique regions: {len(regions)}")
+    print(f"  Total categories: {len(categories)}")
+    
+    print(f"\nContent Characteristics:")
+    print(f"  Average article: {statistics.mean(content_lengths):.0f} characters (~{statistics.mean(content_word_counts):.0f} words)")
+    print(f"  Longest article: {max(content_lengths):,} characters")
+    print(f"  Articles present: {content_present}/{len(all_files)} ({content_present/len(all_files)*100:.1f}%)")
+    
+    print(f"\nLanguage Mix:")
+    print(f"  ✓ Romanian (Romania) - ro-RO: {ro_ro_count:,} articles ({ro_ro_count/len(all_files)*100:.1f}%)")
+    print(f"  ✓ Romanian (Moldova) - ro-MD: {ro_md_count:,} articles ({ro_md_count/len(all_files)*100:.1f}%)")
 
 df_divergence = lang_diff(ro_corpus, md_corpus)
 print_divergent_phrases(df_divergence, top_n=15)
 
-print("\n" + "="*80)
-print("8. FINAL SUMMARY")
-print("="*80)
-
-print(f"\nDataset Overview:")
-print(f"  Total articles: {len(all_files):,}")
-print(f"  Total unique regions: {len(regions)}")
-print(f"  Total categories: {len(categories)}")
-
-print(f"\nContent Characteristics:")
-print(f"  Average article: {statistics.mean(content_lengths):.0f} characters (~{statistics.mean(content_word_counts):.0f} words)")
-print(f"  Longest article: {max(content_lengths):,} characters")
-print(f"  Articles present: {content_present}/{len(all_files)} ({content_present/len(all_files)*100:.1f}%)")
-
-print(f"\nLanguage Mix:")
-print(f"  ✓ Romanian (Romania) - ro-RO: {ro_ro_count:,} articles ({ro_ro_count/len(all_files)*100:.1f}%)")
-print(f"  ✓ Romanian (Moldova) - ro-MD: {ro_md_count:,} articles ({ro_md_count/len(all_files)*100:.1f}%)")
-
-print("\n✓ Analysis complete!")
