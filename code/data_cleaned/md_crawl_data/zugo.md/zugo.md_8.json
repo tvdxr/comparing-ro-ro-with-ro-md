@@ -1,8 +1,8 @@
 {
-  "title": "Contacte",
-  "content": "Republica Moldova, mun. Chișinău\n\nStudio: str. Bogdan Voievod, 2C, et. 14, bir. 94\n\nTelefon: 068 013 424\n\nE-mail: contact@zugo.md\n\n\nUrmărește-ne pe \nTelegram\n și \nInstagram\n.",
+  "title": "Scurgere de date a platformei Instagram: 17,5 milioane de conturi, compromise",
+  "content": "Datele furate sunt deja distribuite pe forumuri de hacking, dar și pe dark web, punând milioane de utilizatori afectați la risc, potrivit NDTV\n, citat de \nMediafax\n.\n\n\nUrmărește-ne pe \nTelegram\n și \nInstagram\n.\n\n\n\n\nCompania de cybersecurity a avertizat că amploarea datelor expuse crește riscul de abuz. Este foarte probabil ca infractorii să exploateze informațiile obținute în cadrul unor atacuri pentru uzurparea identității, campanii de phishing, dar și încercări de obținere a datelor de conectare, fiind avantajați de mecanismul de schimbare al parolei prin platforma Instagram, pentru a obține ilicit accesul la cont, a avertizat compania.\n\nSe crede că datele provin dintr-o scurgere de informații din API (Interfața de programare a aplicațiilor) a Instagram din 2024. Recent, un hacker numit „Solonik” a postat setul de date pe un astfel de forum de hacking.\n\nÎnregistrările de date par să fie structurate ca răspunsuri ale API, ceea ce sugerează ca datele să fi fost colectate automat, prin web scraping. Datele includ nume de utilizator, adrese de email, numere de telefon, dar și ID-uri de utilizator, precum și metadate ale profilurilor.\n\nDatele ar fi putut fi obținute prin exploatarea unui punct API expus sau un sistem configurat incorect. Cu toate acestea, sursa scurgerii informațiilor rămâne încă neclară.\n\nCu toate acestea, Meta, compania mamă a platformei Instagram\n nu a confirmat\n public breșa.\n\nUtilizatorii care primesc email-uri de la Instagram pentru resetarea parolei ar trebui să le ignore. De asemenea, compania de cybersecurity îi sfătuiește să activeze autentificarea în doi pași (2FA). O eventuală schimbare a parolei ar fi recomandată.",
   "metadata": {
     "id": 8,
-    "source_url": "https://zugo.md/contacte-zugo/"
+    "source_url": "https://zugo.md/externe/scurgere-de-date-a-platformei-instagram-175-milioane-de-conturi-compromise/248931/externe"
   }
 }
