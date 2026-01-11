@@ -1,4 +1,3 @@
-import os
 import json
 import spacy
 from pathlib import Path
